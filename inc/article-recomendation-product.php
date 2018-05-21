@@ -20,30 +20,8 @@ function wpdocs_my_display_callback( $post ) {
   $key_cprec = get_post_meta( $post->ID, '_cp_recommend', true ); 
     // Display code/markup goes here. Don't forget to include nonces!
   global $lima_query,$wpdb;
-  
-  /*  
-  $data['table'] = "lm_category_position a LEFT JOIN ".$wpdb->prefix."terms b 
-    ON a.category_id = b.term_id ";
-  $data['where'] = $Where." ORDER BY no_urut ASC ";
-  $query = $lima_query->get_results($data);
-  $option = '<option value="">Pilih Category Produk...</option>';
-  foreach($query as $v){
-    if($key_cprec == $v->category_id){
-      $option .= '<option value="'.$v->category_id.'" selected>'.$v->name.' ('.$v->slug.')</option>';
-    }else{
-      $option .= '<option value="'.$v->category_id.'">'.$v->name.' ('.$v->slug.')</option>';
-    }
-  }
-  */
-  
-  
+
   ?>
-  
-  <!--
-    <select name="cp_recommend" id="cp_recommend">
-      <?php //echo $option;?>
-    </select> 
-  --> 
   <label>Attributes : </label> 
   <select name="post_product_recommended[]" id="post_product_recommended" multiple="yes" style="width:300px;">
     <option value="">-Pilih Attribute</option>
@@ -56,7 +34,7 @@ function wpdocs_my_display_callback( $post ) {
     
     jQuery('#publish').prop('disabled',true);
     var data = {'action':'lima_post_load_attributes','id':'<?php echo $post->ID; ?>'};
-    jQuery('#meta-box-recommended-product').block({message:null});
+    // jQuery('#meta-box-recommended-product').block({message:null});
     jQuery.ajax({
             url: ajaxurl,
             method: "POST",
@@ -64,8 +42,8 @@ function wpdocs_my_display_callback( $post ) {
             dataType: "html",
             success: function(data) {
         jQuery('#post_product_recommended').html(data); 
-        jQuery('#post_product_recommended').select2();    
-        jQuery('#meta-box-recommended-product').unblock();
+        // jQuery('#post_product_recommended').select2();     
+        // jQuery('#meta-box-recommended-product').unblock();
         jQuery('#publish').prop('disabled',false);
       }
     });
