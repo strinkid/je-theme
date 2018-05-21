@@ -1,0 +1,204 @@
+<?php
+/**
+ * The Template for displaying all single products.
+ *
+ * Override this template by copying it to yourtheme/woocommerce/single-product.php
+ *
+ * @author        WooThemes
+ * @package    WooCommerce/Templates
+ * @version     1.6.4
+ */
+
+get_header('shop'); ?>
+<script type='text/javascript' src='http://localhost/wp-content/themes/je-theme/js/jquery.min.js?ver=1.11.3'></script>
+<script type='text/javascript' src='http://localhost/wp-content/themes/je-theme/js/product.details.slider.js'></script>
+
+
+<div itemscope itemtype="<?php echo woocommerce_get_product_schema(); ?>" id="product-<?php the_ID(); ?>" <?php post_class(); ?>>
+    <div class="col-sm-12">
+        <!-- <div class="col-sm-5"> -->
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="images">
+
+                    <?php
+                    if (has_post_thumbnail()) {
+
+                        $image_title = esc_attr(get_the_title(get_post_thumbnail_id()));
+                        $image_caption = get_post(get_post_thumbnail_id())->post_excerpt;
+                        $image_link = wp_get_attachment_url(get_post_thumbnail_id());
+                        $image = get_the_post_thumbnail($post->ID, apply_filters('single_product_large_thumbnail_size', 'shop_single'), array(
+                            'title' => $image_title,
+                            'alt' => $image_title,
+                            'id' => 'thumb'
+                        ));
+
+                        $attachment_count = count($product->get_gallery_attachment_ids());
+
+                        if ($attachment_count > 0) {
+                            $gallery = '[product-gallery]';
+                        } else {
+                            $gallery = '';
+                        }
+
+                        //echo apply_filters( 'woocommerce_single_product_image_html', sprintf( '<a id="productDetailsViewedImage" href="%s" itemprop="image" class="woocommerce-main-image zoom" title="%s" data-rel="prettyPhoto' . $gallery . '">%s</a>', $image_link, $image_caption, $image ), $post->ID );
+
+                        ?>
+                        <div id="productDetailsViewedImage">
+                        <a class="magnifier-thumb-wrapper" href="<?php echo $image_link; ?>" style="margin:auto;width:300px;height:300px;">
+                            <?php echo $image; ?>
+                        </a>
+                        </div><?php
+
+                    } else {
+
+                        echo apply_filters('woocommerce_single_product_image_html', sprintf('<img src="%s" alt="%s" />', wc_placeholder_img_src(), __('Placeholder', 'woocommerce')), $post->ID);
+
+                    }
+                    ?>
+
+                    <?php do_action('woocommerce_product_thumbnails'); ?>
+                </div>
+            </div>
+        </div>
+        global $post, $product, $woocommerce;
+
+        $attachment_ids = $product->get_gallery_attachment_ids();
+
+        if ( $attachment_ids ) {
+        $loop = 0;
+        $columns = apply_filters( 'woocommerce_product_thumbnails_columns', 3 );
+        ?>
+        <div class="thumbnails <?php echo 'columns-' . $columns; ?>">
+
+            <?php
+            if (count($attachment_ids) > 4) echo '<div id="productDetailsImageSliderPrev" class="productDetailsImageSlider productDetailsSliderHide"><</div>';
+            foreach ($attachment_ids as $attachment_id) {
+
+                $imgclasses = 'img-responsive';
+                $divclasses = 'productDetailsThumbnail';
+                if ($loop > 4) $divclasses .= ' productDetailsThumbnailHide';
+
+                $image_link = wp_get_attachment_url($attachment_id);
+
+                if (!$image_link)
+                    continue;
+
+                $image = wp_get_attachment_image($attachment_id, 'full', false, array('class' => $imgclasses));
+
+                echo '<div class="' . $divclasses . '" id="productDetailsThumbnail' . $loop . '">' . $image . '</div>';
+
+                $loop++;
+            }
+            if ($loop > 4) echo '<div id="productDetailsImageSliderNext" class="productDetailsImageSlider" highestVisible="4" highestVisibleMax="' . (count($attachment_ids) - 1) . '">></div>';
+
+            ?></div>
+        <div id="productDetailsImageZoomed" class="col-sm-8 summary entry-summary productDetailsThumbnailHide" style="width: 600px; height: 600px">
+            <div class="magnifier-preview" id="preview" style="width: 600px; height: 600px"></div>
+        </div>
+        <!-- .summary -->
+        <div id="productDetailsSummary" class="col-sm-8 summary entry-summary ">
+            <h1 itemprop="name" class="product_title entry-title"><?php the_title(); ?></h1>
+
+            <div id="prod-info" style="text-align:left; font-weight:bold">
+                <div class="product_attributes">Brand : <?php echo $brands[0] ?></div>
+                <div class="product_attributes" style="display:inline;">Product No. : <?php echo $product->sku ?></div>
+                <div style="float:right;">
+                    <div class="fade-socials-small facebook-small" style="float:right">
+                        <a href="https://www.facebook.com/JualElektronik.Indonesia " class="fade-socials-small facebook-small" title="Facebook" style="display: none;"></a>
+                    </div>
+                    <div class="fade-socials-small twitter-small" style="float:right">
+                        <a href="https://twitter.com/JE_Online" class="fade-socials-small twitter-small" title="Twitter" style="display: none;"></a>
+                    </div>
+                    <div class="fade-socials-small google-small" style="float:right">
+                        <a href="https://plus.google.com/105766867091116749173/about" class="fade-socials-small google-small" title="Google"></a>
+                    </div>
+                    <div class="fade-socials-small linkedin-small" style="float:right">
+                        <a href="http://www.linkedin.com/company/jualelektronik-com" class="fade-socials-small linkedin-small" title="Linkedin" style="display: none;"></a>
+                    </div>
+                </div>
+            </div>
+
+            <?php
+            /**
+             * Single Product Price, including microdata for SEO
+             *
+             * @author        WooThemes
+             * @package    WooCommerce/Templates
+             * @version     1.6.4
+             */
+
+            if (!defined('ABSPATH')) {
+                exit; // Exit if accessed directly
+            }
+
+            global $product;
+
+            ?>
+            <div class="">
+                <div class="col-sm-4" id="priceContainer">
+                    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+
+                        <div class="product_attributes">HARGA:</div>
+                        <div class="price"><?php echo getCurrencyDisplay($product->get_price()); ?></div>
+
+                        <meta itemprop="price" content="<?php echo $product->get_price(); ?>"/>
+                        <meta itemprop="priceCurrency" content="<?php echo get_woocommerce_currency(); ?>"/>
+                        <link itemprop="availability" href="http://schema.org/<?php echo $product->is_in_stock() ? 'InStock' : 'OutOfStock'; ?>"/>
+
+                        <?php if (!empty($product->sale_price)) { ?>
+                            <div class="product_attributes">Sebelum: <?php echo getCurrencyDisplay($product->regular_price); ?></div>
+                            <div class="product_attributes">Hemat: <?php echo getCurrencyDisplay(($product->regular_price - $product->sale_price)); ?></div>
+                            <br/>
+                        <?php } ?>
+                    </div>
+                    <?php
+                    // Availability
+                    $availability = $product->get_availability();
+                    $availability_html = empty($availability['availability']) ? '' : '<p class="stock ' . esc_attr($availability['class']) . '">' . esc_html($availability['availability']) . '</p>';
+
+                    echo apply_filters('woocommerce_stock_html', $availability_html, $availability['availability'], $product);
+                    ?>
+
+                    <?php if ($product->is_in_stock()) : ?>
+
+                        <?php do_action('woocommerce_before_add_to_cart_form'); ?>
+
+                        <form class="cart" method="post" enctype='multipart/form-data'>
+                            <?php do_action('woocommerce_before_add_to_cart_button'); ?>
+
+                            <?php
+                            if (!$product->is_sold_individually())
+                                woocommerce_quantity_input(array(
+                                    'min_value' => apply_filters('woocommerce_quantity_input_min', 1, $product),
+                                    'max_value' => apply_filters('woocommerce_quantity_input_max', $product->backorders_allowed() ? '' : $product->get_stock_quantity(), $product)
+                                ));
+                            ?>
+
+                            <input type="hidden" name="add-to-cart" value="<?php echo esc_attr($product->id); ?>"/>
+
+                            <div>
+                                <button type="submit" id="btn-buy" class="btn btn-default" type="submit"><b>BELI</b>
+                                </button>
+                            </div>
+
+
+
+
+                            <?php do_action('woocommerce_after_add_to_cart_button'); ?>
+
+                        </form>
+
+                        <?php do_action('woocommerce_after_add_to_cart_form'); ?>
+
+                    <?php endif; ?>
+
+                </div>
+
+                <script type="text/javascript" src="http://localhost/wp-content/themes/je-theme/js/ImageZoom.Event.js"></script>
+                <script type="text/javascript" src="http://localhost/wp-content/themes/je-theme/js/ImageZoom.Magnifier.js"></script>
+                <link rel="stylesheet" type="text/css" href="http://localhost/wp-content/themes/je-theme/css/ImageZoom.magnifier.css">
+                <script type="text/javascript">
+                </script>
+
+                <?php get_footer('shop'); ?>
