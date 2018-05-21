@@ -281,8 +281,6 @@ global $woocommerce;
             </div>
 
             <?php do_action('woocommerce_review_order_after_submit'); ?>
-            <img src="http://www.pricearea.com/tcheckout/jualelektronik.com/1334" width="1" height="1"/>
-
         </div>
     </div>
 
