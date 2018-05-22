@@ -8,7 +8,7 @@ wp_enqueue_script('jquery.aim', get_template_directory_uri() . '/js/jquery.menu-
 wp_enqueue_script('je.jquery.aim', get_template_directory_uri() . '/js/je.jquery.menu-aim.js', array('jquery'), '1.70', true);
  }
 ?>
-<html>
+<!DOCTYPE html>
 <head>
     <title>Jual Elektronik</title>
     <meta charset="UTF-8">
