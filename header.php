@@ -9,6 +9,7 @@ wp_enqueue_script('je.jquery.aim', get_template_directory_uri() . '/js/je.jquery
  }
 ?>
 <!DOCTYPE html>
+<html>
 <head>
     <title>Jual Elektronik</title>
     <meta charset="UTF-8">
